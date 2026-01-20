@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema do Caçador</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: radial-gradient(circle at top, #1b1f3b, #0a0a12);
+      color: #e6e6f0;
+    }
+    header {
+      padding: 24px;
+      text-align: center;
+      background: linear-gradient(135deg, #2b3cff, #6a00ff);
+      box-shadow: 0 0 20px rgba(90,0,255,0.6);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.4rem;
+      letter-spacing: 2px;
+    }
+    header p {
+      margin-top: 8px;
+      font-style: italic;
+      opacity: 0.9;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .status {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .card {
+      background: rgba(20, 20, 40, 0.9);
+      border: 1px solid rgba(120, 120, 255, 0.3);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 0 15px rgba(90,0,255,0.25);
+    }
+    .card h3 {
+      margin-top: 0;
+      color: #9aa2ff;
+    }
+    .missions h2 {
+      color: #b39cff;
+      border-bottom: 1px solid rgba(180,150,255,0.3);
+      padding-bottom: 8px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      text-align: center;
+    }
+    th {
+      color: #aab0ff;
+      font-weight: 600;
+    }
+    input[type="checkbox"] {
+      transform: scale(1.4);
+    }
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      opacity: 0.6;
+      font-size: 0.9rem;
+    }
+    .rest-day {
+      text-align: center;
+      font-size: 1.3rem;
+      padding: 40px;
+      color: #cbbcff;
+      background: rgba(40,40,80,0.6);
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(100,0,255,0.4);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>SISTEMA DO CAÇADOR</h1>
+  <p>Jogador: <strong>Kaíco Rodrigues</strong></p>
+  <p>“Eu vou dominar o sistema”</p>
+</header>
+
+<div class="container">
+
+  <section class="status">
+    <div class="card">
+      <h3>Nível</h3>
+      <p contenteditable="true">1</p>
+    </div>
+    <div class="card">
+      <h3>XP Atual</h3>
+      <p contenteditable="true">75</p>
+    </div>
+    <div class="card">
+      <h3>Pontos</h3>
+      <p contenteditable="true">75</p>
+    </div>
+  </section>
+
+  <section class="missions">
+    <h2>Missões Diárias</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Concluir</th>
+          <th>Missão (editável)</th>
+          <th>Recompensa</th>
+          <th>Punição</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td contenteditable="true">Ler a Bíblia</td>
+          <td contenteditable="true">+15 XP</td>
+          <td contenteditable="true">-10 pts</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td contenteditable="true">Ler outro livro</td>
+          <td contenteditable="true">+10 XP</td>
+          <td contenteditable="true">-5 pts</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td contenteditable="true">Cardio</td>
+          <td contenteditable="true">+15 XP</td>
+          <td contenteditable="true">-10 pts</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td contenteditable="true">Academia</td>
+          <td contenteditable="true">+20 XP</td>
+          <td contenteditable="true">-15 pts</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td contenteditable="true">Estudar Inglês</td>
+          <td contenteditable="true">+15 XP</td>
+          <td contenteditable="true">-10 pts</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="missions" style="margin-top:40px;">
+    <h2>Missões Semanais</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Concluir</th>
+          <th>Missão (editável)</th>
+          <th>Recompensa</th>
+          <th>Punição</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td contenteditable="true">Manter rotina completa por 5 dias</td>
+          <td contenteditable="true">+50 XP</td>
+          <td contenteditable="true">-30 pts</td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td contenteditable="true">Participar das atividades espirituais</td>
+          <td contenteditable="true">+40 XP</td>
+          <td contenteditable="true">-20 pts</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="missions" style="margin-top:40px;">
+    <h2>Missões Especiais</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Concluir</th>
+          <th>Missão (editável)</th>
+          <th>Recompensa</th>
+          <th>Punição</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td contenteditable="true">Superar um desafio pessoal importante</td>
+          <td contenteditable="true">+100 XP</td>
+          <td contenteditable="true">Penalidade simbólica</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="missions" style="margin-top:40px;">
+    <h2>Sábado — Dia de Descanso</h2>
+    <div class="rest-day">Dia de descanso. O Caçador volta-se para Deus.</div>
+  </section>
+
+  <section class="missions" style="margin-top:40px;">
+    <h2>Recompensas & Punições</h2>
+    <div class="card" contenteditable="true">
+      Aqui você pode escrever recompensas por metas semanais e punições por falhas consecutivas.
+    </div>
+  </section>
+
+  <div class="footer">
+    Sistema pessoal • Uso individual • Inspirado em Solo Leveling
+  </div>
+
+</div>
+
+</body>
+</html>
