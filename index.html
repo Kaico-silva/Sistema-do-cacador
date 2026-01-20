@@ -3,123 +3,120 @@
 <head>
 <meta charset="UTF-8">
 <title>Sistema do Caçador</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body {
-  background:#0f0f0f;
-  color:#eee;
+  margin:0;
   font-family:Arial, sans-serif;
-  margin:20px;
+  background:linear-gradient(135deg,#0a0f2c,#3b1366);
+  color:#fff;
 }
-h1,h2 { color:#6cf; }
-.box {
-  border:1px solid #333;
-  padding:15px;
-  margin-bottom:15px;
-  border-radius:8px;
+.container {
+  max-width:900px;
+  margin:auto;
+  padding:30px 20px;
+}
+h1,h2,h3 {
+  text-align:center;
+}
+.quote {
+  text-align:center;
+  font-style:italic;
+  margin:20px 0 40px;
+}
+.card {
+  background:rgba(255,255,255,0.1);
+  border-radius:12px;
+  padding:20px;
+  margin-bottom:20px;
+}
+.mission {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin:8px 0;
 }
 button {
-  background:#1f6feb;
-  color:white;
+  background:#6f4cff;
   border:none;
-  padding:8px 12px;
-  border-radius:5px;
+  color:white;
+  padding:6px 12px;
+  border-radius:8px;
   cursor:pointer;
 }
-button:hover { background:#388bfd; }
-#overlay {
-  position:fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  background:rgba(0,0,0,0.85);
-  display:none;
-  justify-content:center;
-  align-items:center;
-  z-index:999;
+button:disabled {
+  background:#444;
 }
-#overlay div {
-  background:#111;
-  border:2px solid #6cf;
-  padding:30px;
+.note {
   text-align:center;
-  border-radius:12px;
-  animation: pop 0.4s ease;
-}
-@keyframes pop {
-  from { transform:scale(0.5); opacity:0; }
-  to { transform:scale(1); opacity:1; }
+  opacity:0.8;
+  font-size:0.9em;
 }
 </style>
 </head>
 
 <body>
+<div class="container">
 
-<h1>🗡️ Sistema do Caçador</h1>
+<h1>Sistema do Caçador</h1>
+<h2>Jogador: Kaíco Rodrigues</h2>
+<div class="quote">"Eu vou dominar o sistema."</div>
 
-<div class="box">
-  <p><b>Nível:</b> <span id="nivel">1</span></p>
-  <p><b>XP:</b> <span id="xp">0</span> / <span id="xpNec">100</span></p>
-  <p><b>Pontos:</b> <span id="pontos">0</span></p>
+<div class="card">
+<h3>📊 Pontos Totais</h3>
+<p id="points">0</p>
 </div>
 
-<div class="box">
-<h2>📅 Missões Diárias</h2>
-<button onclick="missao(10,20)">Treino físico</button>
-<button onclick="missao(5,10)">Leitura</button>
+<div class="card">
+<h3>🔥 Missões Diárias</h3>
+
+<div class="mission">📖 Ler a Bíblia <button onclick="complete(10,this)">+10</button></div>
+<div class="mission">📚 Ler outro livro <button onclick="complete(10,this)">+10</button></div>
+<div class="mission">🏃 Cardio <button onclick="complete(15,this)">+15</button></div>
+<div class="mission">🏋️ Academia <button onclick="complete(20,this)">+20</button></div>
+<div class="mission">🇺🇸 Estudar Inglês <button onclick="complete(10,this)">+10</button></div>
+
 </div>
 
-<div class="box">
-<h2>📆 Missões Semanais</h2>
-<button onclick="missao(30,50)">Treinar 5 dias</button>
-<button onclick="missao(40,70)">Estudo profundo</button>
+<div class="card">
+<h3>📆 Missões Semanais (domingo → sexta)</h3>
+
+<div class="mission">✔ Cumprir a rotina da semana <button onclick="complete(50,this)">+50</button></div>
+<div class="mission">📘 Estudar pelo menos 3 dias <button onclick="complete(30,this)">+30</button></div>
+
+<p class="note">🕊️ Sábado: dia de descanso santificado</p>
 </div>
 
-<div class="box">
-<h2>🔥 Missões Especiais</h2>
-<button onclick="missao(100,150)">Superação extrema</button>
+<div class="card">
+<h3>⭐ Missões Especiais</h3>
+
+<div class="mission">🏆 Manter disciplina por 7 dias <button onclick="complete(100,this)">+100</button></div>
+<div class="mission">⚔️ Superar um desafio pessoal <button onclick="complete(150,this)">+150</button></div>
+
 </div>
 
-<div id="overlay">
-  <div>
-    <h2>✅ MISSÃO CONCLUÍDA</h2>
-    <p id="msg"></p>
-    <button onclick="fechar()">Continuar</button>
-  </div>
 </div>
 
 <script>
-let dados = JSON.parse(localStorage.getItem("caçador")) || {
-  xp:0,
-  nivel:1,
-  pontos:0
-};
+let points = localStorage.getItem("points")
+  ? parseInt(localStorage.getItem("points"))
+  : 0;
 
-function xpNecessaria(nivel){
-  return 100 + (nivel-1)*50;
+function update(){
+  document.getElementById("points").innerText = points;
+  localStorage.setItem("points", points);
 }
 
-function atualizar(){
-  document.getElementById("xp").innerText = dados.xp;
-  document.getElementById("nivel").innerText = dados.nivel;
-  document.getElementById("pontos").innerText = dados.pontos;
-  document.getElementById("xpNec").innerText = xpNecessaria(dados.nivel);
-  localStorage.setItem("caçador", JSON.stringify(dados));
+function complete(value, btn){
+  points += value;
+  btn.disabled = true;
+  update();
 }
 
-function missao(pontos, xp){
-  dados.pontos += pontos;
-  dados.xp += xp;
+update();
+</script>
 
-  while(dados.xp >= xpNecessaria(dados.nivel)){
-    dados.xp -= xpNecessaria(dados.nivel);
-    dados.nivel++;
-  }
+</body>
+</html>
 
-  document.getElementById("msg").innerText =
-    `+${pontos} pontos | +${xp} XP`;
 
-  document.getElementById("overlay").style.display="flex";
-  atualizar();
-}
-
-function fechar(){
-  document.getElementById("overl
