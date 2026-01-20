@@ -52,6 +52,10 @@ button:disabled {
   opacity:0.8;
   font-size:0.9em;
 }
+.status {
+  text-align:center;
+  line-height:1.6;
+}
 </style>
 </head>
 
@@ -62,61 +66,21 @@ button:disabled {
 <h2>Jogador: Kaíco Rodrigues</h2>
 <div class="quote">"Eu vou dominar o sistema."</div>
 
-<div class="card">
-<h3>📊 Pontos Totais</h3>
-<p id="points">0</p>
+<div class="card status">
+  <p><strong>Pontos:</strong> <span id="points">0</span></p>
+  <p><strong>Nível:</strong> <span id="level">1</span> — <span id="title">Iniciante</span></p>
 </div>
 
 <div class="card">
 <h3>🔥 Missões Diárias</h3>
 
-<div class="mission">📖 Ler a Bíblia <button onclick="complete(10,this)">+10</button></div>
-<div class="mission">📚 Ler outro livro <button onclick="complete(10,this)">+10</button></div>
-<div class="mission">🏃 Cardio <button onclick="complete(15,this)">+15</button></div>
-<div class="mission">🏋️ Academia <button onclick="complete(20,this)">+20</button></div>
-<div class="mission">🇺🇸 Estudar Inglês <button onclick="complete(10,this)">+10</button></div>
+<div class="mission">📖 Ler a Bíblia <button onclick="complete(10,5,this)">+10</button></div>
+<div class="mission">📚 Ler outro livro <button onclick="complete(10,5,this)">+10</button></div>
+<div class="mission">🏃 Cardio <button onclick="complete(15,8,this)">+15</button></div>
+<div class="mission">🏋️ Academia <button onclick="complete(20,10,this)">+20</button></div>
+<div class="mission">🇺🇸 Estudar Inglês <button onclick="complete(10,5,this)">+10</button></div>
 
 </div>
 
 <div class="card">
-<h3>📆 Missões Semanais (domingo → sexta)</h3>
-
-<div class="mission">✔ Cumprir a rotina da semana <button onclick="complete(50,this)">+50</button></div>
-<div class="mission">📘 Estudar pelo menos 3 dias <button onclick="complete(30,this)">+30</button></div>
-
-<p class="note">🕊️ Sábado: dia de descanso santificado</p>
-</div>
-
-<div class="card">
-<h3>⭐ Missões Especiais</h3>
-
-<div class="mission">🏆 Manter disciplina por 7 dias <button onclick="complete(100,this)">+100</button></div>
-<div class="mission">⚔️ Superar um desafio pessoal <button onclick="complete(150,this)">+150</button></div>
-
-</div>
-
-</div>
-
-<script>
-let points = localStorage.getItem("points")
-  ? parseInt(localStorage.getItem("points"))
-  : 0;
-
-function update(){
-  document.getElementById("points").innerText = points;
-  localStorage.setItem("points", points);
-}
-
-function complete(value, btn){
-  points += value;
-  btn.disabled = true;
-  update();
-}
-
-update();
-</script>
-
-</body>
-</html>
-
-
+<h3
