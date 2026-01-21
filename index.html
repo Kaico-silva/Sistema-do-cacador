@@ -130,8 +130,30 @@ small {
 </div>
 
 </div>
+<script>
+let totalPontos = 0;
+
+const pontosSpan = document.getElementById("pontos");
+const missoes = document.querySelectorAll(".missao");
+
+missoes.forEach(missao => {
+  missao.addEventListener("change", () => {
+    const valor = parseInt(missao.dataset.pontos);
+
+    if (missao.checked) {
+      totalPontos += valor;
+    } else {
+      totalPontos -= valor;
+    }
+
+    pontosSpan.textContent = totalPontos;
+  });
+});
+</script>
+
 </body>
 </html>
+
 
 
 
