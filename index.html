@@ -4,57 +4,63 @@
 <meta charset="UTF-8">
 <title>Sistema do Caçador</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 body {
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:linear-gradient(135deg,#0a0f2c,#3b1366);
-  color:#fff;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #0b1026, #3a136f);
+  color: #ffffff;
 }
+
 .container {
-  max-width:900px;
-  margin:auto;
-  padding:30px 20px;
+  max-width: 900px;
+  margin: auto;
+  padding: 30px 20px;
 }
-h1,h2,h3 {
-  text-align:center;
+
+h1 {
+  text-align: center;
+  font-size: 2.6em;
 }
+
+h2 {
+  text-align: center;
+  font-weight: normal;
+  opacity: 0.8;
+}
+
 .quote {
-  text-align:center;
-  font-style:italic;
-  margin:20px 0 40px;
+  text-align: center;
+  font-style: italic;
+  margin: 30px 0;
+  font-size: 1.2em;
 }
-.card {
-  background:rgba(255,255,255,0.1);
-  border-radius:12px;
-  padding:20px;
-  margin-bottom:20px;
+
+.section {
+  background: rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 25px;
 }
-.mission {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin:8px 0;
+
+.section h3 {
+  margin-top: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  padding-bottom: 5px;
 }
-button {
-  background:#6f4cff;
-  border:none;
-  color:white;
-  padding:6px 12px;
-  border-radius:8px;
-  cursor:pointer;
+
+ul {
+  list-style: none;
+  padding: 0;
 }
-button:disabled {
-  background:#444;
+
+li {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
 }
-.note {
-  text-align:center;
-  opacity:0.8;
-  font-size:0.9em;
-}
-.status {
-  text-align:center;
-  line-height:1.6;
+small {
+  opacity: 0.7;
 }
 </style>
 </head>
@@ -64,23 +70,54 @@ button:disabled {
 
 <h1>Sistema do Caçador</h1>
 <h2>Jogador: Kaíco Rodrigues</h2>
+
 <div class="quote">"Eu vou dominar o sistema."</div>
 
-<div class="card status">
-  <p><strong>Pontos:</strong> <span id="points">0</span></p>
-  <p><strong>Nível:</strong> <span id="level">1</span> — <span id="title">Iniciante</span></p>
+<div class="section">
+<h3>📅 Missões Diárias</h3>
+<ul>
+<li>📖 Ler a Bíblia</li>
+<li>📚 Ler outro livro</li>
+<li>🏃 Cardio</li>
+<li>🏋️ Academia</li>
+<li>🇺🇸 Estudar Inglês</li>
+</ul>
 </div>
 
-<div class="card">
-<h3>🔥 Missões Diárias</h3>
-
-<div class="mission">📖 Ler a Bíblia <button onclick="complete(10,5,this)">+10</button></div>
-<div class="mission">📚 Ler outro livro <button onclick="complete(10,5,this)">+10</button></div>
-<div class="mission">🏃 Cardio <button onclick="complete(15,8,this)">+15</button></div>
-<div class="mission">🏋️ Academia <button onclick="complete(20,10,this)">+20</button></div>
-<div class="mission">🇺🇸 Estudar Inglês <button onclick="complete(10,5,this)">+10</button></div>
-
+<div class="section">
+<h3>📆 Missões Semanais</h3>
+<ul>
+<li>Organizar a semana</li>
+<li>Estudar um tema espiritual</li>
+<li>Progredir em um objetivo físico</li>
+</ul>
 </div>
 
-<div class="card">
-<h3
+<div class="section">
+<h3>⭐ Missões Especiais</h3>
+<ul>
+<li>Desafio de disciplina extrema</li>
+<li>Missão espiritual profunda</li>
+</ul>
+</div>
+
+<div class="section">
+<h3>🎁 Recompensas</h3>
+<ul>
+<li>Tempo livre consciente</li>
+<li>Algo que motive sem culpa</li>
+</ul>
+</div>
+
+<div class="section">
+<h3>⚠️ Punições</h3>
+<ul>
+<li>Redução de lazer</li>
+<li>Tarefa física extra</li>
+</ul>
+<small>O sistema observa. O progresso é inegociável.</small>
+</div>
+
+</div>
+</body>
+</html>
