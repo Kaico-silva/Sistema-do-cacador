@@ -131,28 +131,41 @@ small {
 
 </div>
 <script>
-let totalPontos = 0;
-
 const pontosSpan = document.getElementById("pontos");
 const missoes = document.querySelectorAll(".missao");
 
-missoes.forEach(missao => {
+// carregar pontos salvos
+let totalPontos = parseInt(localStorage.getItem("pontosSistema")) || 0;
+pontosSpan.textContent = totalPontos;
+
+// restaurar checkboxes
+missoes.forEach((missao, index) => {
+  const salvo = localStorage.getItem("missao_" + index);
+  if (salvo === "true") {
+    missao.checked = true;
+  }
+
   missao.addEventListener("change", () => {
     const valor = parseInt(missao.dataset.pontos);
 
     if (missao.checked) {
       totalPontos += valor;
+      localStorage.setItem("missao_" + index, "true");
     } else {
       totalPontos -= valor;
+      localStorage.setItem("missao_" + index, "false");
     }
 
     pontosSpan.textContent = totalPontos;
+    localStorage.setItem("pontosSistema", totalPontos);
   });
 });
 </script>
 
+
 </body>
 </html>
+
 
 
 
