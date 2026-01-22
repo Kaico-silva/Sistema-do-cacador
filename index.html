@@ -30,6 +30,7 @@ button, input, select {
   padding: 8px;
   border-radius: 6px;
   border: none;
+  margin: 4px 0;
 }
 
 button {
@@ -40,11 +41,11 @@ button {
 
 button:disabled {
   opacity: 0.5;
+  cursor: not-allowed;
 }
 
-.admin input, .admin select {
-  margin: 4px 0;
-  width: 100%;
+strong {
+  color: #7cf0ff;
 }
 </style>
 </head>
@@ -55,48 +56,45 @@ button:disabled {
 <h1>Sistema do Caçador</h1>
 <h2>Jogador: Kaíco Rodrigues</h2>
 
-<div class="section" id="status">
-<p>Rank: <strong><span id="rank">E</span></strong></p>
-<p>Nível: <strong><span id="nivel">1</span></strong></p>
-<p>Pontos: <strong><span id="pontos">0</span></strong></p>
-<p>XP: <span id="xpAtual">0</span> / 100</p>
+<div class="section">
+<p>Rank: <strong id="rank">E</strong></p>
+<p>Nível: <strong id="nivel">1</strong></p>
+<p>Pontos: <strong id="pontos">0</strong></p>
+<p>XP: <span id="xp">0</span> / 100</p>
 </div>
 
-<!-- MISSÕES -->
 <div class="section">
 <h3>📅 Missões</h3>
-<ul id="listaMissoes"></ul>
+<ul id="missoes"></ul>
 </div>
 
-<!-- RECOMPENSAS -->
 <div class="section">
 <h3>🎁 Recompensas</h3>
-<ul id="listaRecompensas"></ul>
+<ul id="recompensas"></ul>
 </div>
 
-<!-- PUNIÇÕES -->
 <div class="section">
 <h3>⚠️ Punições</h3>
-<ul id="listaPunicoes"></ul>
+<ul id="punicoes"></ul>
 </div>
 
-<!-- PAINEL ADMIN -->
-<div class="section admin">
+<div class="section">
 <h3>🛠️ Painel do Sistema</h3>
 
 <select id="tipo">
-<option value="missao">Missão</option>
-<option value="recompensa">Recompensa</option>
-<option value="punicao">Punição</option>
+  <option value="missao">Missão</option>
+  <option value="recompensa">Recompensa</option>
+  <option value="punicao">Punição</option>
+</select>
+
+<select id="categoria">
+  <option value="diaria">Diária</option>
+  <option value="semanal">Semanal</option>
+  <option value="especial">Especial</option>
 </select>
 
 <input id="titulo" placeholder="Descrição">
 <input id="valor" type="number" placeholder="Pontos / Custo">
-<select id="categoria">
-<option value="diaria">Diária</option>
-<option value="semanal">Semanal</option>
-<option value="especial">Especial</option>
-</select>
 
 <button onclick="adicionar()">Adicionar</button>
 </div>
@@ -104,7 +102,7 @@ button:disabled {
 </div>
 
 <script>
-// ===== DADOS =====
+// ================= DADOS =================
 let dados = JSON.parse(localStorage.getItem("sistema")) || {
   pontos: 0,
   missoes: [],
@@ -112,21 +110,26 @@ let dados = JSON.parse(localStorage.getItem("sistema")) || {
   punicoes: []
 };
 
-const pontosSpan = document.getElementById("pontos");
-const nivelSpan = document.getElementById("nivel");
-const xpSpan = document.getElementById("xpAtual");
-const rankSpan = document.getElementById("rank");
+const pontosEl = document.getElementById("pontos");
+const nivelEl = document.getElementById("nivel");
+const xpEl = document.getElementById("xp");
+const rankEl = document.getElementById("rank");
+
+const tipoEl = document.getElementById("tipo");
+const categoriaEl = document.getElementById("categoria");
+const tituloEl = document.getElementById("titulo");
+const valorEl = document.getElementById("valor");
 
 function salvar() {
   localStorage.setItem("sistema", JSON.stringify(dados));
 }
 
-// ===== STATUS =====
+// ================= STATUS =================
 function atualizarStatus() {
-  pontosSpan.textContent = dados.pontos;
-  let nivel = Math.floor(dados.pontos / 100) + 1;
-  nivelSpan.textContent = nivel;
-  xpSpan.textContent = dados.pontos % 100;
+  pontosEl.textContent = dados.pontos;
+  const nivel = Math.floor(dados.pontos / 100) + 1;
+  nivelEl.textContent = nivel;
+  xpEl.textContent = dados.pontos % 100;
 
   let rank = "E";
   if (nivel >= 55) rank = "Monarca";
@@ -139,74 +142,80 @@ function atualizarStatus() {
   else if (nivel >= 6) rank = "C";
   else if (nivel >= 3) rank = "D";
 
-  rankSpan.textContent = rank;
+  rankEl.textContent = rank;
 }
 
-// ===== RENDER =====
+// ================= RENDER =================
 function render() {
-  document.getElementById("listaMissoes").innerHTML =
-    dados.missoes.map((m,i)=>`
-      <li>
-        <input type="checkbox" ${m.feita?"checked":""}
-        onclick="toggleMissao(${i})">
-        ${m.titulo} (+${m.valor})
-      </li>`).join("");
+  document.getElementById("missoes").innerHTML =
+    ["diaria","semanal","especial"].map(cat => `
+      <li><strong>${cat.toUpperCase()}</strong></li>
+      ${dados.missoes.filter(m=>m.categoria===cat).map((m,i)=>`
+        <li>
+          <input type="checkbox" ${m.feita?"checked":""}
+          onclick="toggleMissao(${dados.missoes.indexOf(m)})">
+          ${m.titulo} (+${m.valor})
+        </li>
+      `).join("")}
+    `).join("");
 
-  document.getElementById("listaRecompensas").innerHTML =
+  document.getElementById("recompensas").innerHTML =
     dados.recompensas.map((r,i)=>`
       <li>
         <button ${dados.pontos<r.valor?"disabled":""}
         onclick="usarRecompensa(${i})">
         ${r.titulo} (${r.valor})
         </button>
-      </li>`).join("");
+      </li>
+    `).join("");
 
-  document.getElementById("listaPunicoes").innerHTML =
+  document.getElementById("punicoes").innerHTML =
     dados.punicoes.map(p=>`<li>${p.titulo}</li>`).join("");
 
   atualizarStatus();
 }
 
-// ===== AÇÕES =====
+// ================= AÇÕES =================
 function toggleMissao(i) {
-  let m = dados.missoes[i];
-  m.feita = !m.feita;
-  dados.pontos += m.feita ? m.valor : -m.valor;
+  dados.missoes[i].feita = !dados.missoes[i].feita;
+  dados.pontos += dados.missoes[i].feita ? dados.missoes[i].valor : -dados.missoes[i].valor;
   salvar(); render();
 }
 
 function usarRecompensa(i) {
-  let r = dados.recompensas[i];
-  if (dados.pontos >= r.valor) {
-    dados.pontos -= r.valor;
-    alert("Recompensa usada.");
-    salvar(); render();
-  }
+  dados.pontos -= dados.recompensas[i].valor;
+  alert("Recompensa usada.");
+  salvar(); render();
 }
 
 function adicionar() {
   const tipo = tipoEl.value;
-  const titulo = tituloEl.value;
-  const valor = parseInt(valorEl.value);
+  const titulo = tituloEl.value.trim();
+  const valor = parseInt(valorEl.value) || 0;
+  const categoria = categoriaEl.value;
 
   if (!titulo) return;
 
   if (tipo === "missao")
-    dados.missoes.push({titulo, valor, feita:false});
+    dados.missoes.push({titulo, valor, categoria, feita:false});
   if (tipo === "recompensa")
     dados.recompensas.push({titulo, valor});
   if (tipo === "punicao")
     dados.punicoes.push({titulo});
 
+  tituloEl.value = "";
+  valorEl.value = "";
+
   salvar(); render();
 }
 
-// ===== INIT =====
+// ================= INIT =================
 render();
 </script>
 
 </body>
 </html>
+
 
 
 
