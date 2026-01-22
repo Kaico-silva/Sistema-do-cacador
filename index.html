@@ -74,6 +74,11 @@ button:disabled {
   cursor: not-allowed;
 }
 
+.rank {
+  font-weight: bold;
+  color: #7cf0ff;
+}
+
 small {
   opacity: 0.7;
 }
@@ -90,6 +95,7 @@ small {
 
 <div class="section" id="status">
 <h3>📊 Status do Sistema</h3>
+<p>Rank: <strong><span id="rank">E</span></strong></p>
 <p>Nível: <strong><span id="nivel">1</span></strong></p>
 <p>Pontos atuais: <strong><span id="pontos">0</span></strong></p>
 <p>XP do nível: <strong><span id="xpAtual">0</span></strong> / 100</p>
@@ -163,6 +169,7 @@ if (localStorage.getItem("ultimaSemana") != semanaAtual) {
 const pontosSpan = document.getElementById("pontos");
 const nivelSpan = document.getElementById("nivel");
 const xpAtualSpan = document.getElementById("xpAtual");
+const rankSpan = document.getElementById("rank");
 
 let totalPontos = parseInt(localStorage.getItem("pontosSistema")) || 0;
 
@@ -171,6 +178,21 @@ function atualizarNivel() {
   const xp = totalPontos % 100;
   nivelSpan.textContent = nivel;
   xpAtualSpan.textContent = xp;
+  atualizarRank(nivel);
+}
+
+function atualizarRank(nivel) {
+  let rank = "E";
+  if (nivel >= 55) rank = "Monarca";
+  else if (nivel >= 45) rank = "Nacional";
+  else if (nivel >= 36) rank = "SSS";
+  else if (nivel >= 28) rank = "SS";
+  else if (nivel >= 21) rank = "S";
+  else if (nivel >= 15) rank = "A";
+  else if (nivel >= 10) rank = "B";
+  else if (nivel >= 6) rank = "C";
+  else if (nivel >= 3) rank = "D";
+  rankSpan.textContent = rank;
 }
 
 pontosSpan.textContent = totalPontos;
@@ -230,6 +252,7 @@ atualizarRecompensas();
 
 </body>
 </html>
+
 
 
 
