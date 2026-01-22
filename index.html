@@ -178,11 +178,49 @@ missoes.forEach((missao, index) => {
     localStorage.setItem("pontosSistema", totalPontos);
   });
 });
+// ===== SISTEMA DE RECOMPENSAS =====
+const botoesRecompensa = document.querySelectorAll(".recompensa");
+const statusRecompensa = document.querySelectorAll(".status-recompensa");
+
+function atualizarRecompensas() {
+  botoesRecompensa.forEach((botao, index) => {
+    const custo = parseInt(botao.dataset.custo);
+
+    if (totalPontos >= custo) {
+      botao.disabled = false;
+      statusRecompensa[index].textContent = "Disponível";
+      statusRecompensa[index].style.color = "#7CFF9B";
+    } else {
+      botao.disabled = true;
+      statusRecompensa[index].textContent = "Bloqueada";
+      statusRecompensa[index].style.color = "#FF7C7C";
+    }
+  });
+}
+
+botoesRecompensa.forEach((botao, index) => {
+  botao.addEventListener("click", () => {
+    const custo = parseInt(botao.dataset.custo);
+
+    if (totalPontos >= custo) {
+      totalPontos -= custo;
+      pontosSpan.textContent = totalPontos;
+      localStorage.setItem("pontosSistema", totalPontos);
+      atualizarRecompensas();
+      alert("Recompensa utilizada.");
+    }
+  });
+});
+
+// atualizar ao carregar a página
+atualizarRecompensas();
+
 </script>
 
 
 </body>
 </html>
+
 
 
 
