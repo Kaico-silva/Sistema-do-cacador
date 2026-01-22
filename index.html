@@ -19,24 +19,6 @@ body {
   padding: 30px 20px;
 }
 
-h1 {
-  text-align: center;
-  font-size: 2.6em;
-}
-
-h2 {
-  text-align: center;
-  font-weight: normal;
-  opacity: 0.8;
-}
-
-.quote {
-  text-align: center;
-  font-style: italic;
-  margin: 30px 0;
-  font-size: 1.2em;
-}
-
 .section {
   background: rgba(255,255,255,0.08);
   border-radius: 14px;
@@ -44,43 +26,25 @@ h2 {
   margin-bottom: 25px;
 }
 
-.section h3 {
-  margin-top: 0;
-  border-bottom: 1px solid rgba(255,255,255,0.3);
-  padding-bottom: 5px;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
+button, input, select {
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
 }
 
 button {
   background: #1f2b6d;
   color: #fff;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
   cursor: pointer;
 }
 
 button:disabled {
   opacity: 0.5;
-  cursor: not-allowed;
 }
 
-.rank {
-  font-weight: bold;
-  color: #7cf0ff;
-}
-
-small {
-  opacity: 0.7;
+.admin input, .admin select {
+  margin: 4px 0;
+  width: 100%;
 }
 </style>
 </head>
@@ -91,97 +55,79 @@ small {
 <h1>Sistema do Caçador</h1>
 <h2>Jogador: Kaíco Rodrigues</h2>
 
-<div class="quote">"Eu vou dominar o sistema."</div>
-
 <div class="section" id="status">
-<h3>📊 Status do Sistema</h3>
 <p>Rank: <strong><span id="rank">E</span></strong></p>
 <p>Nível: <strong><span id="nivel">1</span></strong></p>
-<p>Pontos atuais: <strong><span id="pontos">0</span></strong></p>
-<p>XP do nível: <strong><span id="xpAtual">0</span></strong> / 100</p>
+<p>Pontos: <strong><span id="pontos">0</span></strong></p>
+<p>XP: <span id="xpAtual">0</span> / 100</p>
 </div>
 
+<!-- MISSÕES -->
 <div class="section">
-<h3>📅 Missões Diárias</h3>
-<ul>
-<li><label><input type="checkbox" class="missao diaria" data-pontos="10"> 📖 Ler a Bíblia</label></li>
-<li><label><input type="checkbox" class="missao diaria" data-pontos="20"> 📚 Ler outro livro</label></li>
-<li><label><input type="checkbox" class="missao diaria" data-pontos="10"> 🏃 Cardio</label></li>
-<li><label><input type="checkbox" class="missao diaria" data-pontos="15"> 🏋️ Academia</label></li>
-<li><label><input type="checkbox" class="missao diaria" data-pontos="20"> 🇺🇸 Estudar Inglês</label></li>
-</ul>
+<h3>📅 Missões</h3>
+<ul id="listaMissoes"></ul>
 </div>
 
+<!-- RECOMPENSAS -->
 <div class="section">
-<h3>📆 Missões Semanais</h3>
-<ul>
-<li><label><input type="checkbox" class="missao semanal" data-pontos="30"> Organizar a semana</label></li>
-<li><label><input type="checkbox" class="missao semanal" data-pontos="30"> Estudar um tema espiritual</label></li>
-<li><label><input type="checkbox" class="missao semanal" data-pontos="30"> Progredir em um objetivo físico</label></li>
-</ul>
-</div>
-
-<div class="section">
-<h3>⭐ Missões Especiais</h3>
-<ul>
-<li><label><input type="checkbox" class="missao" data-pontos="100"> Desafio de disciplina extrema</label></li>
-<li><label><input type="checkbox" class="missao" data-pontos="150"> Missão espiritual profunda</label></li>
-</ul>
-</div>
-
-<div class="section" id="recompensas">
 <h3>🎁 Recompensas</h3>
-<ul>
-<li><button class="recompensa" data-custo="50">🎮 30 min de lazer (50 pts)</button> <span class="status-recompensa"></span></li>
-<li><button class="recompensa" data-custo="100">🍿 Filme sem culpa (100 pts)</button> <span class="status-recompensa"></span></li>
-<li><button class="recompensa" data-custo="200">🎁 Recompensa especial (200 pts)</button> <span class="status-recompensa"></span></li>
-</ul>
-<small>Clique para gastar pontos quando estiver disponível.</small>
+<ul id="listaRecompensas"></ul>
 </div>
 
+<!-- PUNIÇÕES -->
 <div class="section">
 <h3>⚠️ Punições</h3>
-<ul>
-<li>Redução de lazer</li>
-<li>Tarefa física extra</li>
-</ul>
-<small>O sistema observa. O progresso é inegociável.</small>
+<ul id="listaPunicoes"></ul>
+</div>
+
+<!-- PAINEL ADMIN -->
+<div class="section admin">
+<h3>🛠️ Painel do Sistema</h3>
+
+<select id="tipo">
+<option value="missao">Missão</option>
+<option value="recompensa">Recompensa</option>
+<option value="punicao">Punição</option>
+</select>
+
+<input id="titulo" placeholder="Descrição">
+<input id="valor" type="number" placeholder="Pontos / Custo">
+<select id="categoria">
+<option value="diaria">Diária</option>
+<option value="semanal">Semanal</option>
+<option value="especial">Especial</option>
+</select>
+
+<button onclick="adicionar()">Adicionar</button>
 </div>
 
 </div>
 
 <script>
-// ================= RESET =================
-const hoje = new Date().toLocaleDateString();
-const semanaAtual = Math.ceil((((new Date()) - new Date(new Date().getFullYear(),0,1)) / 86400000 + new Date(new Date().getFullYear(),0,1).getDay()+1)/7);
+// ===== DADOS =====
+let dados = JSON.parse(localStorage.getItem("sistema")) || {
+  pontos: 0,
+  missoes: [],
+  recompensas: [],
+  punicoes: []
+};
 
-if (localStorage.getItem("ultimoResetDiario") !== hoje) {
-  document.querySelectorAll(".missao.diaria").forEach((m,i)=>{m.checked=false; localStorage.setItem("missao_diaria_"+i,false);});
-  localStorage.setItem("ultimoResetDiario", hoje);
-}
-
-if (localStorage.getItem("ultimaSemana") != semanaAtual) {
-  document.querySelectorAll(".missao.semanal").forEach((m,i)=>{m.checked=false; localStorage.setItem("missao_semanal_"+i,false);});
-  localStorage.setItem("ultimaSemana", semanaAtual);
-}
-
-// ================= STATUS =================
 const pontosSpan = document.getElementById("pontos");
 const nivelSpan = document.getElementById("nivel");
-const xpAtualSpan = document.getElementById("xpAtual");
+const xpSpan = document.getElementById("xpAtual");
 const rankSpan = document.getElementById("rank");
 
-let totalPontos = parseInt(localStorage.getItem("pontosSistema")) || 0;
-
-function atualizarNivel() {
-  const nivel = Math.floor(totalPontos / 100) + 1;
-  const xp = totalPontos % 100;
-  nivelSpan.textContent = nivel;
-  xpAtualSpan.textContent = xp;
-  atualizarRank(nivel);
+function salvar() {
+  localStorage.setItem("sistema", JSON.stringify(dados));
 }
 
-function atualizarRank(nivel) {
+// ===== STATUS =====
+function atualizarStatus() {
+  pontosSpan.textContent = dados.pontos;
+  let nivel = Math.floor(dados.pontos / 100) + 1;
+  nivelSpan.textContent = nivel;
+  xpSpan.textContent = dados.pontos % 100;
+
   let rank = "E";
   if (nivel >= 55) rank = "Monarca";
   else if (nivel >= 45) rank = "Nacional";
@@ -192,66 +138,76 @@ function atualizarRank(nivel) {
   else if (nivel >= 10) rank = "B";
   else if (nivel >= 6) rank = "C";
   else if (nivel >= 3) rank = "D";
+
   rankSpan.textContent = rank;
 }
 
-pontosSpan.textContent = totalPontos;
-atualizarNivel();
+// ===== RENDER =====
+function render() {
+  document.getElementById("listaMissoes").innerHTML =
+    dados.missoes.map((m,i)=>`
+      <li>
+        <input type="checkbox" ${m.feita?"checked":""}
+        onclick="toggleMissao(${i})">
+        ${m.titulo} (+${m.valor})
+      </li>`).join("");
 
-// ================= MISSÕES =================
-document.querySelectorAll(".missao").forEach((missao, index) => {
-  const salvo = localStorage.getItem("missao_" + index);
-  if (salvo === "true") missao.checked = true;
+  document.getElementById("listaRecompensas").innerHTML =
+    dados.recompensas.map((r,i)=>`
+      <li>
+        <button ${dados.pontos<r.valor?"disabled":""}
+        onclick="usarRecompensa(${i})">
+        ${r.titulo} (${r.valor})
+        </button>
+      </li>`).join("");
 
-  missao.addEventListener("change", () => {
-    const valor = parseInt(missao.dataset.pontos);
-    totalPontos += missao.checked ? valor : -valor;
-    localStorage.setItem("missao_" + index, missao.checked);
-    localStorage.setItem("pontosSistema", totalPontos);
-    pontosSpan.textContent = totalPontos;
-    atualizarNivel();
-    atualizarRecompensas();
-  });
-});
+  document.getElementById("listaPunicoes").innerHTML =
+    dados.punicoes.map(p=>`<li>${p.titulo}</li>`).join("");
 
-// ================= RECOMPENSAS =================
-const botoesRecompensa = document.querySelectorAll(".recompensa");
-const statusRecompensa = document.querySelectorAll(".status-recompensa");
-
-function atualizarRecompensas() {
-  botoesRecompensa.forEach((botao, index) => {
-    const custo = parseInt(botao.dataset.custo);
-    if (totalPontos >= custo) {
-      botao.disabled = false;
-      statusRecompensa[index].textContent = "Disponível";
-      statusRecompensa[index].style.color = "#7CFF9B";
-    } else {
-      botao.disabled = true;
-      statusRecompensa[index].textContent = "Bloqueada";
-      statusRecompensa[index].style.color = "#FF7C7C";
-    }
-  });
+  atualizarStatus();
 }
 
-botoesRecompensa.forEach((botao) => {
-  botao.addEventListener("click", () => {
-    const custo = parseInt(botao.dataset.custo);
-    if (totalPontos >= custo) {
-      totalPontos -= custo;
-      localStorage.setItem("pontosSistema", totalPontos);
-      pontosSpan.textContent = totalPontos;
-      atualizarNivel();
-      atualizarRecompensas();
-      alert("Recompensa utilizada.");
-    }
-  });
-});
+// ===== AÇÕES =====
+function toggleMissao(i) {
+  let m = dados.missoes[i];
+  m.feita = !m.feita;
+  dados.pontos += m.feita ? m.valor : -m.valor;
+  salvar(); render();
+}
 
-atualizarRecompensas();
+function usarRecompensa(i) {
+  let r = dados.recompensas[i];
+  if (dados.pontos >= r.valor) {
+    dados.pontos -= r.valor;
+    alert("Recompensa usada.");
+    salvar(); render();
+  }
+}
+
+function adicionar() {
+  const tipo = tipoEl.value;
+  const titulo = tituloEl.value;
+  const valor = parseInt(valorEl.value);
+
+  if (!titulo) return;
+
+  if (tipo === "missao")
+    dados.missoes.push({titulo, valor, feita:false});
+  if (tipo === "recompensa")
+    dados.recompensas.push({titulo, valor});
+  if (tipo === "punicao")
+    dados.punicoes.push({titulo});
+
+  salvar(); render();
+}
+
+// ===== INIT =====
+render();
 </script>
 
 </body>
 </html>
+
 
 
 
