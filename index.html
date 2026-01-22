@@ -104,9 +104,12 @@ small {
 <div class="section">
 <h3>📆 Missões Semanais</h3>
 <ul>
-<li><label><input type="checkbox" class="missao" data-pontos="30"> Organizar a semana</label></li>
-<li><label><input type="checkbox" class="missao" data-pontos="40"> Estudar um tema espiritual</label></li>
-<li><label><input type="checkbox" class="missao" data-pontos="50"> Progredir em um objetivo físico</label></li>
+<li><label><input type="checkbox" class="missao semanal" data-pontos="30">
+ Organizar a semana</label></li>
+<li><label><input type="checkbox" class="missao semanal" data-pontos="30">
+ Estudar um tema espiritual</label></li>
+<li><label><input type="checkbox" class="missao semanal" data-pontos="30">
+ Progredir em um objetivo físico</label></li>
 </ul>
 </div>
 
@@ -155,6 +158,38 @@ small {
 
 </div>
 <script>
+// ===============================
+// 🔁 RESET DIÁRIO E SEMANAL
+// ===============================
+
+const hoje = new Date().toLocaleDateString();
+const semanaAtual = getSemanaAtual();
+
+function getSemanaAtual() {
+  const data = new Date();
+  const primeiroDia = new Date(data.getFullYear(), 0, 1);
+  const dias = Math.floor((data - primeiroDia) / (24 * 60 * 60 * 1000));
+  return Math.ceil((dias + primeiroDia.getDay() + 1) / 7);
+}
+
+// 🔄 Reset diário
+if (localStorage.getItem("ultimoResetDiario") !== hoje) {
+  document.querySelectorAll(".missao.diaria").forEach((missao, index) => {
+    missao.checked = false;
+    localStorage.setItem("missao_diaria_" + index, "false");
+  });
+  localStorage.setItem("ultimoResetDiario", hoje);
+}
+
+// 🔄 Reset semanal
+if (localStorage.getItem("ultimaSemana") != semanaAtual) {
+  document.querySelectorAll(".missao.semanal").forEach((missao, index) => {
+    missao.checked = false;
+    localStorage.setItem("missao_semanal_" + index, "false");
+  });
+  localStorage.setItem("ultimaSemana", semanaAtual);
+}
+
 const pontosSpan = document.getElementById("pontos");
 const missoes = document.querySelectorAll(".missao");
 
@@ -174,7 +209,14 @@ missoes.forEach((missao, index) => {
 
     if (missao.checked) {
       totalPontos += valor;
-      localStorage.setItem("missao_" + index, "true");
+      if (missao.classList.contains("diaria")) {
+  localStorage.setItem("missao_diaria_" + index, missao.checked);
+} else if (missao.classList.contains("semanal")) {
+  localStorage.setItem("missao_semanal_" + index, missao.checked);
+} else {
+  localStorage.setItem("missao_" + index, missao.checked);
+}
+
     } else {
       totalPontos -= valor;
       localStorage.setItem("missao_" + index, "false");
@@ -227,6 +269,7 @@ atualizarRecompensas();
 
 </body>
 </html>
+
 
 
 
