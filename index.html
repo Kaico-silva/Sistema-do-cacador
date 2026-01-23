@@ -26,17 +26,37 @@ body {
   margin-bottom: 25px;
 }
 
-button, input, select {
-  padding: 8px;
-  border-radius: 6px;
-  border: none;
-  margin: 4px 0;
+h3 {
+  margin-top: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  padding-bottom: 6px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
 }
 
 button {
   background: #1f2b6d;
   color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
   cursor: pointer;
+}
+
+button.excluir {
+  background: #7a1f2b;
+  margin-left: 8px;
 }
 
 button:disabled {
@@ -44,8 +64,8 @@ button:disabled {
   cursor: not-allowed;
 }
 
-strong {
-  color: #7cf0ff;
+small {
+  opacity: 0.7;
 }
 </style>
 </head>
@@ -64,8 +84,18 @@ strong {
 </div>
 
 <div class="section">
-<h3>📅 Missões</h3>
-<ul id="missoes"></ul>
+<h3>📅 Missões Diárias</h3>
+<ul id="missoes-diarias"></ul>
+</div>
+
+<div class="section">
+<h3>📆 Missões Semanais</h3>
+<ul id="missoes-semanais"></ul>
+</div>
+
+<div class="section">
+<h3>⭐ Missões Especiais</h3>
+<ul id="missoes-especiais"></ul>
 </div>
 
 <div class="section">
@@ -102,7 +132,6 @@ strong {
 </div>
 
 <script>
-// ================= DADOS =================
 let dados = JSON.parse(localStorage.getItem("sistema")) || {
   pontos: 0,
   missoes: [],
@@ -115,16 +144,10 @@ const nivelEl = document.getElementById("nivel");
 const xpEl = document.getElementById("xp");
 const rankEl = document.getElementById("rank");
 
-const tipoEl = document.getElementById("tipo");
-const categoriaEl = document.getElementById("categoria");
-const tituloEl = document.getElementById("titulo");
-const valorEl = document.getElementById("valor");
-
 function salvar() {
   localStorage.setItem("sistema", JSON.stringify(dados));
 }
 
-// ================= STATUS =================
 function atualizarStatus() {
   pontosEl.textContent = dados.pontos;
   const nivel = Math.floor(dados.pontos / 100) + 1;
@@ -145,76 +168,92 @@ function atualizarStatus() {
   rankEl.textContent = rank;
 }
 
-// ================= RENDER =================
 function render() {
-  document.getElementById("missoes").innerHTML =
-    ["diaria","semanal","especial"].map(cat => `
-      <li><strong>${cat.toUpperCase()}</strong></li>
-      ${dados.missoes.filter(m=>m.categoria===cat).map((m,i)=>`
-        <li>
-          <input type="checkbox" ${m.feita?"checked":""}
-          onclick="toggleMissao(${dados.missoes.indexOf(m)})">
-          ${m.titulo} (+${m.valor})
-        </li>
-      `).join("")}
-    `).join("");
+  const diaria = document.getElementById("missoes-diarias");
+  const semanal = document.getElementById("missoes-semanais");
+  const especial = document.getElementById("missoes-especiais");
+
+  diaria.innerHTML = "";
+  semanal.innerHTML = "";
+  especial.innerHTML = "";
+
+  dados.missoes.forEach((m,i)=>{
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <label>
+        <input type="checkbox" ${m.feita?"checked":""}
+        onclick="toggleMissao(${i})">
+        ${m.titulo} (+${m.valor})
+      </label>
+      <button class="excluir" onclick="excluirMissao(${i})">❌</button>
+    `;
+    if (m.categoria === "diaria") diaria.appendChild(li);
+    if (m.categoria === "semanal") semanal.appendChild(li);
+    if (m.categoria === "especial") especial.appendChild(li);
+  });
 
   document.getElementById("recompensas").innerHTML =
     dados.recompensas.map((r,i)=>`
       <li>
-        <button ${dados.pontos<r.valor?"disabled":""}
-        onclick="usarRecompensa(${i})">
-        ${r.titulo} (${r.valor})
-        </button>
+        <span>${r.titulo} (${r.valor})</span>
+        <span>
+          <button ${dados.pontos<r.valor?"disabled":""}
+          onclick="usarRecompensa(${i})">Usar</button>
+          <button class="excluir" onclick="excluirRecompensa(${i})">❌</button>
+        </span>
       </li>
     `).join("");
 
   document.getElementById("punicoes").innerHTML =
-    dados.punicoes.map(p=>`<li>${p.titulo}</li>`).join("");
+    dados.punicoes.map((p,i)=>`
+      <li>
+        ${p.titulo}
+        <button class="excluir" onclick="excluirPunicao(${i})">❌</button>
+      </li>
+    `).join("");
 
   atualizarStatus();
 }
 
-// ================= AÇÕES =================
-function toggleMissao(i) {
+function toggleMissao(i){
   dados.missoes[i].feita = !dados.missoes[i].feita;
   dados.pontos += dados.missoes[i].feita ? dados.missoes[i].valor : -dados.missoes[i].valor;
   salvar(); render();
 }
 
-function usarRecompensa(i) {
+function usarRecompensa(i){
   dados.pontos -= dados.recompensas[i].valor;
-  alert("Recompensa usada.");
+  alert("Recompensa utilizada.");
   salvar(); render();
 }
 
-function adicionar() {
-  const tipo = tipoEl.value;
-  const titulo = tituloEl.value.trim();
-  const valor = parseInt(valorEl.value) || 0;
-  const categoria = categoriaEl.value;
+function excluirMissao(i){ dados.missoes.splice(i,1); salvar(); render(); }
+function excluirRecompensa(i){ dados.recompensas.splice(i,1); salvar(); render(); }
+function excluirPunicao(i){ dados.punicoes.splice(i,1); salvar(); render(); }
 
+function adicionar(){
+  const tipo = document.getElementById("tipo").value;
+  const cat = document.getElementById("categoria").value;
+  const titulo = document.getElementById("titulo").value.trim();
+  const valor = parseInt(document.getElementById("valor").value)||0;
   if (!titulo) return;
 
-  if (tipo === "missao")
-    dados.missoes.push({titulo, valor, categoria, feita:false});
-  if (tipo === "recompensa")
-    dados.recompensas.push({titulo, valor});
-  if (tipo === "punicao")
-    dados.punicoes.push({titulo});
+  if (tipo==="missao") dados.missoes.push({titulo,valor,categoria:cat,feita:false});
+  if (tipo==="recompensa") dados.recompensas.push({titulo,valor});
+  if (tipo==="punicao") dados.punicoes.push({titulo});
 
-  tituloEl.value = "";
-  valorEl.value = "";
-
+  document.getElementById("titulo").value="";
+  document.getElementById("valor").value="";
   salvar(); render();
 }
 
-// ================= INIT =================
 render();
 </script>
 
 </body>
 </html>
+
+
 
 
 
