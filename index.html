@@ -247,11 +247,47 @@ function adicionar(){
   salvar(); render();
 }
 
+// ================= RESET DIÁRIO E SEMANAL =================
+
+// Data de hoje (apenas dia/mês/ano)
+const hoje = new Date().toLocaleDateString();
+
+// Semana atual (número da semana no ano)
+function semanaAtual() {
+  const data = new Date();
+  const inicioAno = new Date(data.getFullYear(), 0, 1);
+  const dias = Math.floor((data - inicioAno) / 86400000);
+  return Math.ceil((dias + inicioAno.getDay() + 1) / 7);
+}
+
+// 🔄 Reset diário
+if (localStorage.getItem("ultimoResetDiario") !== hoje) {
+  dados.missoes.forEach(m => {
+    if (m.categoria === "diaria") {
+      m.feita = false;
+    }
+  });
+  localStorage.setItem("ultimoResetDiario", hoje);
+  salvar();
+}
+
+// 🔄 Reset semanal
+if (localStorage.getItem("ultimaSemana") != semanaAtual()) {
+  dados.missoes.forEach(m => {
+    if (m.categoria === "semanal") {
+      m.feita = false;
+    }
+  });
+  localStorage.setItem("ultimaSemana", semanaAtual());
+  salvar();
+}
+
 render();
 </script>
 
 </body>
 </html>
+
 
 
 
